@@ -19,9 +19,7 @@
         <canvas id="myCanvas" width="480" height="320"></canvas>
 
         <script>
-            
-          
-			/*var rightPressed = false;
+            /*var rightPressed = false;
             var leftPressed = false;
             var brickRowCount = 5;
             var brickColumnCount = 3;
@@ -31,7 +29,7 @@
             var brickOffsetTop = 30;
             var brickOffsetLeft = 30;
 			*/
-/*
+            /*
             var bricks = [];
             for (var c = 0; c < brickColumnCount; c++) {
                 bricks[c] = [];
@@ -154,23 +152,64 @@ setInterval(draw, 10);
 */
 
             // Non-rotated rectangle
-			var canvas = document.getElementById('myCanvas');
+            var canvas = document.getElementById('myCanvas');
             var ctx = canvas.getContext('2d');
             var ballRadius = 10;
-            var x = canvas.width / 2;
-            var y = canvas.height-ballRadius;
-			var ball_speed = 3; 
-            var dx = 2;
-            var dy = -2;
-            var paddleHeight = 10;
-            var paddleWidth = 75;
-            var paddleX = (canvas.width - paddleWidth) / 2;
+            var ball_speed = 3;
+           
+            
             var rotated_radian = 0.1;
-			var ball_start = false; 
-			var ball_in = false; 
+            var actived= false;
+			var clicked = false;
+			var score =10; 
+            var all_ball = [];
+
+			
+            function makeStruct(names) {
+                var names = names.split(' ');
+                var count = names.length;
+                function constructor() {
+                    for (var i = 0; i < count; i++) {
+                        this[names[i]] = arguments[i];
+                    }
+                } 
+                return constructor;
+            }
+
+            var Ball = makeStruct('id x y dx dy survived');
+			
+			function create_ball() {
+			//	console.log ("id ",id);
+				console.log('rotated radian: ', rotated_radian);
+				
+					var dx,dy;
+                    if (rotated_radian > 0) {
+                        dx = -ball_speed * Math.cos(rotated_radian);
+                        dy = -ball_speed * Math.sin(rotated_radian);
+                    } else {
+                        dx = ball_speed * Math.cos(rotated_radian);
+                        dy = ball_speed * Math.sin(rotated_radian);
+                    }
+                    console.log('dx ', dx);
+                    console.log('dy ', dy);
+				
+				var ball = new Ball (1,canvas.width / 2,canvas.height - ballRadius,dx,dy,1);
+				all_ball.push(ball);
+				
+			}
+			
+			function move_ball(){
+				all_ball.forEach(function(ball){
+					if (ball.survived){
+						ball.x += ball.dx;
+						ball.y += ball.dy;
+					}
+				})
+			}
+            
+			
 
             function rotate_arrow(radian) {
-           
                 var arrow_width = 100;
                 var arrow_height = 20;
 
@@ -198,12 +237,17 @@ setInterval(draw, 10);
             }
 
             document.addEventListener('mousemove', mouseMoveHandler, false);
-			document.addEventListener('click', clickHandler, false);
-			
+            document.addEventListener('click', clickHandler, false);
+
             function mouseMoveHandler(e) {
+				if (actived){
+					console.log ('actived!');
+					return ; 
+				} 
+				
                 var relativeX = e.clientX - canvas.offsetLeft;
                 var relativeY = e.clientY - canvas.offsetTop;
-               
+
                 if (
                     relativeY > canvas.height - 20 ||
                     relativeY < 0 ||
@@ -217,65 +261,65 @@ setInterval(draw, 10);
                 var tan = (arrowY - relativeY) / (relativeX - arrowX);
                 var theta = Math.atan(tan);
 
-
                 rotated_radian = -theta;
 
                 //		rotate_arrow(-theta);
             }
-			
-			function clickHandler(e){
-				ball_start = true; 
-			}
 
-            function drawBall() {
-                ctx.beginPath();
-                ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
-                ctx.fillStyle = '#0095DD';
+            function clickHandler(e) {
+				clicked = true;
+                actived = true;
+            }
+
+            function drawBalls() {
+                
+				all_ball.forEach (function(ball){
+					ctx.beginPath();
+					ctx.arc(ball.x, ball.y, ballRadius, 0, Math.PI * 2);	
+					 ctx.fillStyle = '#0095DD';
                 ctx.fill();
                 ctx.closePath();
+				})
+               
             }
+			
+			function detect_ball(){
+				all_ball.forEach(function(ball){
+				if (ball.x + ball.dx > canvas.width - ballRadius || ball.x + ball.dx < ballRadius) {
+                    ball.dx = -ball.dx;
+                }
+                if (ball.y + ball.dy < ballRadius) {
+                    ball.dy = -ball.dy;
+                } else if (ball.y + ball.dy > canvas.height - ballRadius) {
+                    ball.survived = 0; 
+                }
+				})
+			}
             function draw() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 rotate_arrow(rotated_radian);
-                drawBall();
+                drawBalls();
+				detect_ball();
+					
+               
+                 if (clicked) {				                    
+                    clicked = false;
+					var interval = 1000; 
+					
+					for (var i=0;i<score;i++){
+						setTimeout(()=>create_ball(),interval*i);
+					}
+					
+					setTimeout(function(){actived = false;
+										 console.log ('active is false');}, interval*score);
+					score += 1; 
+                }
 
-                if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
-                    dx = -dx;
-                }
-                if (y + dy < ballRadius) {
-                    dy = -dy;
-                } else if (y + dy > canvas.height - ballRadius) {
-                    if (x > paddleX && x < paddleX + paddleWidth) {
-                        dy = -dy;
-                    } else {
-                        //  alert("GAME OVER");
-                        //document.location.reload();
-                    }
-                }
-				if (ball_start){
-					console.log ('rotated radian: ',rotated_radian);
-					if (rotated_radian >0 ){
-						dx= -ball_speed * Math.cos(rotated_radian);
-						dy = -ball_speed * Math.sin(rotated_radian);
-					}
-					else{
-						dx= ball_speed * Math.cos(rotated_radian);
-						dy = ball_speed * Math.sin(rotated_radian);
-					}
-					console.log ("dx ",dx);
-					console.log ("dy ",dy);
-                	ball_start = false; 
-					ball_in = true;
-				}
-				
-				if (ball_in){
-					x+= dx;
-					y+= dy;
-				}
-				
+                move_ball();
             }
-			
-			
+
+            
+
             setInterval(draw, 10);
         </script>
     </body>
