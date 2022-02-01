@@ -155,12 +155,14 @@ setInterval(draw, 10);
             var canvas = document.getElementById('myCanvas');
             var ctx = canvas.getContext('2d');
             var ballRadius = 10;
-            var ball_speed = 3;
+            var ball_speed = 5;
 
             var rotated_radian = 0.1;
             var actived = false;
             var clicked = false;
-            var score = 1;
+			var finished = false; 
+            var score = 0;
+			var prev_ball_length = 0; 
             var all_ball = [];
 
             function makeStruct(names) {
@@ -178,7 +180,7 @@ setInterval(draw, 10);
 
             function create_ball() {
                 //	console.log ("id ",id);
-                console.log('rotated radian: ', rotated_radian);
+               
 
                 var dx, dy;
                 if (rotated_radian > 0) {
@@ -188,11 +190,11 @@ setInterval(draw, 10);
                     dx = ball_speed * Math.cos(rotated_radian);
                     dy = ball_speed * Math.sin(rotated_radian);
                 }
-                console.log('dx ', dx);
-                console.log('dy ', dy);
+               
 
                 var ball = new Ball(1, canvas.width / 2, canvas.height - ballRadius, dx, dy, 1);
                 all_ball.push(ball);
+				
             }
 
             function move_ball() {
@@ -236,7 +238,7 @@ setInterval(draw, 10);
 
             function mouseMoveHandler(e) {
                 if (actived) {
-                    console.log('actived!');
+                  
                     return;
                 }
 
@@ -262,7 +264,11 @@ setInterval(draw, 10);
             }
 
             function clickHandler(e) {
-                if (actived) return;
+			
+                if (actived) {
+					console.log ('aleady actived!');
+					return;
+				}
                 else {
                     clicked = true;
                     actived = true;
@@ -291,6 +297,7 @@ setInterval(draw, 10);
                     if (ball.y + ball.dy < ballRadius) {
                         ball.dy = -ball.dy;
                     } else if (ball.y + ball.dy > canvas.height - ballRadius) {
+					
                         ball.survived = 0;
                     }
                 });
@@ -304,16 +311,22 @@ setInterval(draw, 10);
             var brickOffsetTop = 30;
             var brickOffsetLeft = 30;
 
-            var brick_status = 4;
+            var brick_status = 3;
             var bricks = [];
             for (var c = 0; c < brickColumnCount; c++) {
                 bricks[c] = [];
                 brick_status -= 1;
                 for (var r = 0; r < brickRowCount; r++) {
-                    bricks[c][r] = { x: 0, y: 0, status: brick_status };
+					
+					if (Math.floor((Math.random() * 10))% 5 == 0 ) {
+					
+						
+						bricks[c][r] = { x: 0, y: 0, status: 0 };
+					}
+                    else bricks[c][r] = { x: 0, y: 0, status: brick_status };
                 }
             }
-			brick_status = 4; 
+			brick_status = 3; 
 
             function drawBricks() {
                 for (var c = 0; c < brickColumnCount; c++) {
@@ -369,7 +382,7 @@ setInterval(draw, 10);
 
 				if (cornerDistance_sq <= ballRadius**2) {
 					ball.dy *= -1;
-					ball.dx *= -1;
+				//	ball.dx *= -1;
 					return true;
 				}
     			return false;
@@ -386,7 +399,7 @@ setInterval(draw, 10);
                         all_ball.forEach(function (ball) {
 
                             if (breaker(brick, ball)) {
-								console.log('break!');
+							
 								
 								brick.status -= 1; 
 							}
@@ -398,49 +411,79 @@ setInterval(draw, 10);
 			function shoot_ball(){
 				if (clicked) {
                     clicked = false;
-                    var interval = 1000;
+                    var interval = 300;
 
                     for (var i = 0; i < score; i++) {
                         setTimeout(() => create_ball(), interval * i);
                     }
 
-                    setTimeout(function () {
-                        actived = false;
-						score += 1;
-                        console.log('active is false');
-                    }, interval * score);
+                   
                    
                 }
 
 			} 
 
 			function down_brick(){
-				console.log ('down_brick');
-				 for (var c = brickColumnCount-1; c >= 2; c--) {
-                 
-                    bricks[c] = bricks[c-1].slice();
-                    
+				 for (var c = brickColumnCount-1; c >= 1; c--) {
+                 	for (var r = 0;r <brickRowCount;r++){
+                   	 bricks[c][r] = JSON.parse(JSON.stringify(bricks[c-1][r]));
+					}
                 }
 				
 				for (var r=0;r<brickRowCount; r++){
-					bricks[0][r].status = brick_status;
+					if (Math.floor((Math.random() * 10))% 5 == 0 ) bricks[0][r].status = 0;
+					else bricks[0][r].status = brick_status;
 					 
                         
 				}
 				brick_status += 1;
 			}
+			function is_finished(){
+				
+				
+				if (prev_ball_length+score != all_ball.length) finished = false;
+					
+				else{
+					
+					finished = true; 
+					
+					all_ball.forEach(function(ball){
+						if (ball.survived){
+							finished = false; 
+						}
+					})
+					
+					if (!finished) return finished; 
+					
+					finished = true; 
+					prev_ball_length = all_ball.length; 
+				}
+				
+			return finished; 
+			}
 			
 			function update_score(){
 				var div_score = document.getElementById('score');
+				score += 1;
 				div_score.innerText = score;
 				
 			}
+			
+			function game_over(){
+				for (var r= 0; r<brickRowCount;r++){
+					if (bricks[brickColumnCount-1][r].status > 0) return true;
+				}
+				return false; 
+			}
 			function update_game(){
-				var div_score = document.getElementById('score');
-				if (div_score.innerText != score){
+				
+				if (is_finished()){
+					if (game_over()) alert('game over!');
+					actived = false; 
+					update_score();
 					down_brick();					
 				}
-				update_score();
+				
 			}
             function draw() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -451,9 +494,10 @@ setInterval(draw, 10);
 				shoot_ball();               
                 move_ball();
 				update_game();
+				
             }
 
-			update_score(1);
+			
             setInterval(draw, 10);
 			
 			
