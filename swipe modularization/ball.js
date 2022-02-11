@@ -6,37 +6,54 @@ export class Ball{
 		this.dx = dx;
 		this.dy = dy;
 		this.survived = 1;
-		this.radius = 20;
+		this.radius = 5;
 	
 	}
 	
 	hit_wall(){
-		if (this.x+ this.radius > this.stageWidth || this.x<this.radius) this.dx = -this.dx;
-		if (this.y+ this.radius > this.stageHeight || this.y<this.radius) this.dy = -this.dy;
+		if (this.x+ this.radius > this.stageWidth || this.x<this.radius) {
+			this.dx = -this.dx;
+			this.x += this.dx;
+		}
+		if (this.y+ this.radius > this.stageHeight || this.y<this.radius) {
+			this.dy = -this.dy;
+			this.y += this.dy;
+
+		}
 	}
 	
 	hit_brick(bricks){
 		
-		console.log (bricks);
+		
 		bricks.forEach (function (brick){
-		var mid_x = brick.x + brick.width/2;
-		var mid_y = brick.y + brick.height/2;
+			const min_x = brick.x - this.radius;
+			const max_x = brick.x + brick.width + this.radius;
+			const min_y = brick.y - this.radius;
+			const max_y = brick.y + brick.height + this.radius;
+			
+			if (this.x >= min_x && this.x <= max_x && this.y >= min_y && this.y <= max_y){
+				const x1 = Math.abs (this.x - min_x);
+				const x2 = Math.abs(max_x - this.x);
+				const y1 = Math.abs (this.y - min_y);
+				const y2 = Math.abs(max_y - this.y);
+				
+				const min1 = Math.min (x1,x2);
+				const min2 = Math.min (y1,y2);
+				
+				if (min1< min2){
+					this.dx *= -1;
+					this.x += this.dx;
+				}
+				else{
+					this.dy *= -1;
+					this.y += this.dy;
+				}
+				
+				brick.status -= 1;
+			}
 		
-		var relativeX = Math.abs(mid_x - this.x);
-		var relativeY = Math.abs(mid_y - this.y);
 		
-		if (relativeX >this.radius+brick.width/2) return;
-		if (relativeY >this.radius+brick.height/2) return;
-		
-		if (relativeX <=brick.width/2) {
-			this.dy = -this.dy;
-		}
-		if (relativeY <=brick.height/2) {
-			this.dx = - this.dx;
-		}
-		
-		brick.status -= 1;
-		return;
+			return;
 		}.bind(this))
 	}
 	move_ball(){
@@ -48,28 +65,24 @@ export class Ball{
 		
 	}
 	
-	resize(stageWidth, stageHeight){
+	init_stage(stageWidth, stageHeight){
 		this.stageWidth = stageWidth;
 		this.stageHeight = stageHeight;
-	
-		this.x = stageWidth / 2;
-		this.y = stageHeight / 2;
-		
-		
+
+	//	console.log (this.stageWidth, this.stageHeight);
 	}
 	
 	
 	
 	draw(ctx, bricks){
 		if (this.survived){
-			console.log ('draw');
-			console.log (this);
+			
 			ctx.beginPath();
 			this.hit_brick(bricks);
 			this.hit_wall();
 			this.move_ball();
 			ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-            ctx.fillStyle = 'red';
+            ctx.fillStyle = '#59a7f4';
             ctx.fill();
             ctx.closePath();
 		}
