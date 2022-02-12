@@ -1,19 +1,20 @@
 import {Brick} from './brick.js';
 
 export class Bricks {
-    constructor() {
-        this.container = new Array();
+    constructor(top_line_padding, bottom_line_padding) {
+		this.top_line_padding = top_line_padding + 1; // plus one for padding 
+		this.bottom_line_padding = bottom_line_padding;
 		
+        this.container = new Array();
 		this.top_down_padding = 20;
 		
-		this.container.push(new Brick(1 , 0));
-		this.container.push(new Brick(51, 0));
-		this.container.push(new Brick(101, 0));
-		this.container.push(new Brick(151, 0));
-		this.container.push(new Brick(201, 0));
-		this.container.push(new Brick(251, 0));
+		this.container.push(new Brick(1 ,this.top_line_padding));
+		this.container.push(new Brick(51, this.top_line_padding));
+		this.container.push(new Brick(101, this.top_line_padding));
+		this.container.push(new Brick(151, this.top_line_padding));
+		this.container.push(new Brick(201, this.top_line_padding));
+		this.container.push(new Brick(251, this.top_line_padding));
 
-		this.add_line();
 		
     }
 	
@@ -22,12 +23,12 @@ export class Bricks {
 			brick.y += this.top_down_padding;  
 		}.bind(this))
 		
-		this.container.push(new Brick(1 , 0));
-		this.container.push(new Brick(51, 0));
-		this.container.push(new Brick(101, 0));
-		this.container.push(new Brick(151, 0));
-		this.container.push(new Brick(201, 0));
-		this.container.push(new Brick(251, 0));
+		this.container.push(new Brick(1 , this.top_line_padding));
+		this.container.push(new Brick(51, this.top_line_padding));
+		this.container.push(new Brick(101, this.top_line_padding));
+		this.container.push(new Brick(151, this.top_line_padding));
+		this.container.push(new Brick(201, this.top_line_padding));
+		this.container.push(new Brick(251, this.top_line_padding));
 	}
 	
     draw(ctx) {

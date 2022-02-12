@@ -5,16 +5,23 @@ export class Brick {
         this.width = 48;
         this.height = 13;
         this.status = 2;
+	
 		
     }
 
+	
    
     draw(ctx) {
+		if (this.status <= 0) return;
+		 
         ctx.beginPath();
         ctx.rect(this.x, this.y, this.width, this.height);
-		//low number color#f98966
-		//collsion color #ffb8b1
-        ctx.fillStyle = '#ff4651';
+		
+		if (this.collsion_frame) {
+			ctx.fillStyle = '#ffb8b1';
+			this.collsion_frame -= 1; 
+		}
+        else ctx.fillStyle = '#ff4651';
         ctx.fill();
         ctx.font = '10px Georgia';
         ctx.textAlign = 'center';

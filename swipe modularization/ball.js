@@ -15,7 +15,7 @@ export class Ball{
 			this.dx = -this.dx;
 			this.x += this.dx;
 		}
-		if (this.y+ this.radius > this.stageHeight || this.y<this.radius) {
+		if (this.y+ this.radius > this.stage_max_height || this.y<this.radius+this.stage_min_height) {
 			this.dy = -this.dy;
 			this.y += this.dy;
 
@@ -26,6 +26,7 @@ export class Ball{
 		
 		
 		bricks.forEach (function (brick){
+			if (brick.status <= 0) return;
 			const min_x = brick.x - this.radius;
 			const max_x = brick.x + brick.width + this.radius;
 			const min_y = brick.y - this.radius;
@@ -50,6 +51,7 @@ export class Ball{
 				}
 				
 				brick.status -= 1;
+				brick.collsion_frame = 15;
 			}
 		
 		
@@ -65,16 +67,17 @@ export class Ball{
 		
 	}
 	
-	init_stage(stageWidth, stageHeight){
+	init_stage(stageWidth, stage_min_height,stage_max_height){
 		this.stageWidth = stageWidth;
-		this.stageHeight = stageHeight;
-
+		this.stage_min_height = stage_min_height;
+		this.stage_max_height = stage_max_height;
 	//	console.log (this.stageWidth, this.stageHeight);
 	}
 	
 	
 	
 	draw(ctx, bricks){
+		this.ctx = ctx;
 		if (this.survived){
 			
 			ctx.beginPath();
