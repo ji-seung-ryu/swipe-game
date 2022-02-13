@@ -1,17 +1,23 @@
+import {Broken_brick} from './broken_brick.js';
+
 export class Brick {
-    constructor(x, y) {
+    constructor(x, y,width,height) {
         this.x = x;
         this.y = y;
-        this.width = 48;
-        this.height = 13;
+        this.width = width;
+        this.height = height;
         this.status = 2;
 	
-		
+		this.broken_brick = new Broken_brick(this.x+this.width/2, this.y + this.height/2);
     }
 
 	
    
     draw(ctx) {
+		// draw broken brick 
+		this.broken_brick.draw(ctx);
+		
+		
 		if (this.status <= 0) return;
 		 
         ctx.beginPath();

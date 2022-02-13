@@ -1,20 +1,30 @@
+import {Balls} from './balls.js';
 import {Ball} from './ball.js';
 import {Bricks} from './bricks.js'
 class App{
 	constructor(){
 		this.canvas = document.createElement('canvas');
+		this.canvas.width = 320;
+		this.canvas.height = 480;
+
 		this.ctx = this.canvas.getContext('2d');
 		document.body.appendChild (this.canvas);
-		this.top_line_padding = 20;
-		this.bottom_line_padding = 130;
-		
-		this.ball = new Ball(1,100,100,1,1);
-		this.bricks = new Bricks(this.top_line_padding, this.bottom_line_padding);
+		this.top_line_padding = 70;
+		this.bottom_line_padding = 410;
 		
 		this.init_stage();
+		
+		
+		
+	//	this.ball = new Ball(1,100,100,1,1);
+		this.bricks = new Bricks(this.top_line_padding, this.bottom_line_padding);
+		this.balls = new Balls(this.canvas.width/4,this.bottom_line_padding,this.canvas.width/2, this.top_line_padding, this.bottom_line_padding,this.canvas, this.ctx);
+		
 				
 		requestAnimationFrame(this.animate.bind(this));
 	}
+	
+	
 	
 	init_stage(){	
 		this.canvas.width *= 2;
@@ -22,7 +32,7 @@ class App{
 		this.ctx.scale(2,2);
 			
 		
-		this.ball.init_stage(this.canvas.width/2, this.top_line_padding, this.bottom_line_padding);
+		//this.balls.init_stage(this.canvas.width/2, this.top_line_padding, this.bottom_line_padding);
 		
 	}
 	draw_stage(){
@@ -47,12 +57,12 @@ class App{
 	
 	animate (t){
 
-		this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height);		
+	//	this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height);		
 		
 
 		
 		this.draw_stage();
-		this.ball.draw(this.ctx, this.bricks.container);
+		this.balls.draw(this.ctx, this.bricks.container);
 		this.bricks.draw(this.ctx);
 		
 		requestAnimationFrame(this.animate.bind(this));

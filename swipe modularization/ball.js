@@ -1,13 +1,16 @@
 export class Ball{
-	constructor(id,x,y,dx,dy){
+	constructor(id,x,y,dx,dy,stageWidth, stage_min_height,stage_max_height){
+		
 		this.id = id; 
 		this.x = x;
 		this.y= y;
 		this.dx = dx;
 		this.dy = dy;
+		this.stageWidth = stageWidth;
+		this.stage_min_height = stage_min_height;
+		this.stage_max_height = stage_max_height;
 		this.survived = 1;
 		this.radius = 5;
-	
 	}
 	
 	hit_wall(){
@@ -53,7 +56,12 @@ export class Ball{
 				brick.status -= 1;
 				brick.collsion_frame = 15;
 			}
-		
+			
+			if (brick.status <= 0) {
+				//broken brick event 
+				brick.broken_brick.status = 15; 
+				
+			}
 		
 			return;
 		}.bind(this))
@@ -67,12 +75,6 @@ export class Ball{
 		
 	}
 	
-	init_stage(stageWidth, stage_min_height,stage_max_height){
-		this.stageWidth = stageWidth;
-		this.stage_min_height = stage_min_height;
-		this.stage_max_height = stage_max_height;
-	//	console.log (this.stageWidth, this.stageHeight);
-	}
 	
 	
 	

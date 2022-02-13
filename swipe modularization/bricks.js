@@ -7,13 +7,14 @@ export class Bricks {
 		
         this.container = new Array();
 		this.top_down_padding = 20;
+		this.right_padding = 2; 
+		this.brick_width = 52;
+		this.brick_height = 20;
 		
-		this.container.push(new Brick(1 ,this.top_line_padding));
-		this.container.push(new Brick(51, this.top_line_padding));
-		this.container.push(new Brick(101, this.top_line_padding));
-		this.container.push(new Brick(151, this.top_line_padding));
-		this.container.push(new Brick(201, this.top_line_padding));
-		this.container.push(new Brick(251, this.top_line_padding));
+		for (var b=0;b<6;b++){
+			this.container.push(new Brick((this.brick_width + this.right_padding) * b , this.top_line_padding, this.brick_width, this.brick_height))
+		}
+	
 
 		
     }
@@ -23,12 +24,9 @@ export class Bricks {
 			brick.y += this.top_down_padding;  
 		}.bind(this))
 		
-		this.container.push(new Brick(1 , this.top_line_padding));
-		this.container.push(new Brick(51, this.top_line_padding));
-		this.container.push(new Brick(101, this.top_line_padding));
-		this.container.push(new Brick(151, this.top_line_padding));
-		this.container.push(new Brick(201, this.top_line_padding));
-		this.container.push(new Brick(251, this.top_line_padding));
+		for (var b=0;b<6;b++){
+			this.container.push(new Brick((this.brick_width + this.right_padding) * b , this.top_line_padding, this.brick_width, this.brick_height))
+		}
 	}
 	
     draw(ctx) {
