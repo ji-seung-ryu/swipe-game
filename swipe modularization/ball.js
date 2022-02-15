@@ -9,6 +9,7 @@ export class Ball{
 		this.stageWidth = stageWidth;
 		this.stage_min_height = stage_min_height;
 		this.stage_max_height = stage_max_height;
+		this.speed = 5; 
 		this.survived = 1;
 		this.radius = 5;
 	}
@@ -18,7 +19,7 @@ export class Ball{
 			this.dx = -this.dx;
 			this.x += this.dx;
 		}
-		if (this.y+ this.radius > this.stage_max_height || this.y<this.radius+this.stage_min_height) {
+		if (this.y> this.stage_max_height || this.y<this.radius+this.stage_min_height) {
 			this.dy = -this.dy;
 			this.y += this.dy;
 
