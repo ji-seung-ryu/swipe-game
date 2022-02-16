@@ -15,6 +15,7 @@ export class Balls {
         );
 
         document.addEventListener('mousemove', this.set_theta.bind(this), false);
+
         document.addEventListener('click', this.shoot.bind(this), false);
     }
 
@@ -34,46 +35,59 @@ export class Balls {
 
         this.theta = Math.atan(this.tan);
     }
+	set_line_length(){
+		this.bricks.forEach(function(brick){
+			if (brick.status <= 0) return;
+	
+		}.bind(this))
+	}
     draw_line(ctx) {
-        var arrow_width = 100;
-        var arrow_height = 2;
+		
+		this.line_length = 1000;
+		this.line_width = 2; 
 
         ctx.fillStyle = 'blue';
         ctx.fillRect(
-            this.x ,
-            this.y - arrow_height / 2,
-            arrow_width,
-            arrow_height
+            this.x - this.line_length / 2,
+            this.y - this.line_width / 2,
+            this.line_length,
+            this.line_width
         );
 
-        ctx.translate(this.x , this.y);
+        ctx.translate(this.x, this.y);
         ctx.rotate(this.theta);
         ctx.translate(-this.x, -this.y);
+        ctx.fillStyle = 'red';
 
         // Rotated rectangle
-        ctx.fillStyle = 'red';
-        ctx.fillRect(
-            this.x ,
-            this.y - arrow_height / 2,
-            arrow_width,
-            arrow_height
-        );
+        if (this.theta > 0) {
+            ctx.fillRect(this.x - this.line_length / 2, this.y - this.line_width / 2, this.line_length / 2, this.line_width);
+        } else {
+            ctx.fillRect(this.x, this.y - this.line_width / 2, this.line_length / 2, this.line_width);
+        }
 
         ctx.setTransform(2, 0, 0, 2, 0, 0);
     }
     shoot() {
         this.container.forEach(
             function (ball) {
-	            ball.dx = ball.speed * Math.cos (this.theta);
-				ball.dy = ball.speed * Math.sin (this.theta);
-				if (this.theta >= 0) ball.dx *= -1;				
+                ball.dx = ball.speed * Math.cos(this.theta);
+                ball.dy = ball.speed * Math.sin(this.theta);
+                if (this.theta >= 0){
+					ball.dx *= -1;
+					ball.dy *= -1;
+				}
+				
+				console.log (ball.dx, ball.dy);
             }.bind(this)
         );
     }
 
     draw(ctx, bricks) {
         this.ctx = ctx;
-
+		this.bricks = bricks; 
+		this.set_line_length();
+		
         this.container.forEach(
             function (ball) {
                 ball.draw(this.ctx, bricks);
