@@ -19,10 +19,15 @@ export class Ball{
 			this.dx = -this.dx;
 			this.x += this.dx;
 		}
-		if (this.y> this.stage_max_height || this.y<this.radius+this.stage_min_height) {
+		if (this.y<this.radius+this.stage_min_height) {
 			this.dy = -this.dy;
 			this.y += this.dy;
 
+		}
+		
+		if (this.y > this.stage_max_height){
+			this.survived = 0 ;
+			
 		}
 	}
 	
