@@ -1,1 +1,1 @@
-![image](/swipe.drawio.png)
+![image](/dependency.png)
