@@ -1,5 +1,4 @@
 import {Balls} from './balls.js';
-import {Ball} from './ball.js';
 import {Bricks} from './bricks.js'
 class App{
 	constructor(){

@@ -82,7 +82,7 @@ export class Balls {
 		if (this.all_ball_alive == 1) return;
 		this.line_width = 2; 
 
-        ctx.fillStyle = 'blue';
+        ctx.fillStyle = 'black';
         ctx.fillRect(
             this.x - this.line_length / 2,
             this.y - this.line_width / 2,
