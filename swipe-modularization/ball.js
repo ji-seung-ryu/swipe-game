@@ -11,6 +11,7 @@ export class Ball{
 		this.stage_max_height = stage_max_height;
 		this.speed = 5; 
 		this.survived = 1;
+		// ball.survived 0: died, 1: alive 2: next starting point 
 		this.radius = 5;
 	}
 	
