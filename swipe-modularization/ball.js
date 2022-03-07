@@ -1,5 +1,5 @@
 export class Ball{
-	constructor(id,x,y,dx,dy,stageWidth, stage_min_height,stage_max_height){
+	constructor(id,x,y,dx,dy,stageWidth, stage_min_height,stage_max_height,bricks){
 		
 		this.id = id; 
 		this.x = x;
@@ -9,10 +9,13 @@ export class Ball{
 		this.stageWidth = stageWidth;
 		this.stage_min_height = stage_min_height;
 		this.stage_max_height = stage_max_height;
+		this.bricks = bricks;
+		
 		this.speed = 5; 
 		this.survived = 1;
 		// ball.survived 0: died, 1: alive 2: next starting point 
 		this.radius = 5;
+	
 	}
 	
 	hit_wall(){
@@ -32,10 +35,10 @@ export class Ball{
 		}
 	}
 	
-	hit_brick(bricks){
+	hit_brick(){
 		
 		
-		bricks.forEach (function (brick){
+		this.bricks.container.forEach (function (brick){
 			if (brick.status <= 0) return;
 			const min_x = brick.x - this.radius;
 			const max_x = brick.x + brick.width + this.radius;
@@ -85,12 +88,12 @@ export class Ball{
 	
 	
 	
-	draw(ctx, bricks){
+	draw(ctx){
 		this.ctx = ctx;
 		if (this.survived){
 			
 			ctx.beginPath();
-			this.hit_brick(bricks);
+			this.hit_brick();
 			this.hit_wall();
 			this.move_ball();
 			ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);

@@ -17,7 +17,7 @@ class App{
 		
 	//	this.ball = new Ball(1,100,100,1,1);
 		this.bricks = new Bricks(this.top_line_padding, this.bottom_line_padding);
-		this.balls = new Balls(this.canvas.width/4,this.bottom_line_padding,this.canvas.width/2, this.top_line_padding, this.bottom_line_padding,this.canvas, this.ctx);
+		this.balls = new Balls(this.canvas.width/4,this.bottom_line_padding,this.canvas.width/2, this.top_line_padding, this.bottom_line_padding,this.canvas, this.ctx, this.bricks);
 		
 				
 		requestAnimationFrame(this.animate.bind(this));
@@ -61,7 +61,7 @@ class App{
 
 		
 		this.draw_stage();
-		this.balls.draw(this.ctx, this.bricks.container);
+		this.balls.draw(this.ctx);
 		this.bricks.draw(this.ctx);
 		
 		requestAnimationFrame(this.animate.bind(this));

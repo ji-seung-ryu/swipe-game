@@ -6,7 +6,7 @@ export class Bricks {
 		this.bottom_line_padding = bottom_line_padding;
 		
         this.container = new Array();
-		this.top_down_padding = 20;
+		this.top_down_padding = 22;
 		this.right_padding = 2; 
 		this.brick_width = 52;
 		this.brick_height = 20;
@@ -22,6 +22,7 @@ export class Bricks {
 	add_line(){
 		this.container.forEach(function(brick){
 			brick.y += this.top_down_padding;  
+			brick.broken_brick.y += this.top_down_padding; 
 		}.bind(this))
 		
 		for (var b=0;b<6;b++){

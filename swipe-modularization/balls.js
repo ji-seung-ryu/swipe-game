@@ -1,6 +1,6 @@
 import { Ball } from './ball.js';
 export class Balls {
-    constructor(x, y, stageWidth, stage_min_height, stage_max_height, canvas, ctx) {
+    constructor(x, y, stageWidth, stage_min_height, stage_max_height, canvas, ctx, bricks) {
         this.x = x;
         this.y = y;
         this.stageWidth = stageWidth;
@@ -8,7 +8,8 @@ export class Balls {
         this.stage_max_height = stage_max_height;
         this.canvas = canvas;
         this.ctx = ctx;
-
+		this.bricks = bricks;
+		
 		this.initiated = 0; 
         this.line_length = 1000;
         this.all_ball_alive = 0;
@@ -48,7 +49,7 @@ export class Balls {
                     (this.stage_min_height - this.y) * (this.stage_min_height - this.y)
             );
 
-        this.bricks.forEach(
+        this.bricks.container.forEach(
             function (brick) {
                 if (brick.status <= 0) return;
                 var x1 = brick.x;
@@ -203,19 +204,21 @@ export class Balls {
 
         for (var ball = 0; ball < this.ball_cnt; ball += 1) {
             this.container.push(
-                new Ball(this.ball_cnt, this.x, this.y, 0, 0, this.stageWidth, this.stage_min_height, this.stage_max_height)
+                new Ball(this.ball_cnt, this.x, this.y, 0, 0, this.stageWidth, this.stage_min_height, this.stage_max_height, this.bricks)
             );
         }
+		
+		this.bricks.add_line();
     }
-    draw(ctx, bricks) {
+    draw(ctx) {
         this.ctx = ctx;
-        this.bricks = bricks;
+        
         this.set_line_length();
         this.check_all_ball_alive();
 
         this.container.forEach(
             function (ball) {
-                ball.draw(this.ctx, bricks);
+                ball.draw(this.ctx);
             }.bind(this)
         );
 
