@@ -1,12 +1,12 @@
 import {Broken_brick} from './broken_brick.js';
 
 export class Brick {
-    constructor(x, y,width,height) {
+    constructor(x, y,width,height,status) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
-        this.status = 2;
+        this.status = status;
 	
 		this.broken_brick = new Broken_brick(this.x+this.width/2, this.y + this.height/2);
     }

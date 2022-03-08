@@ -10,6 +10,9 @@ class App{
 		document.body.appendChild (this.canvas);
 		this.top_line_padding = 70;
 		this.bottom_line_padding = 410;
+		this.record = {};
+		this.record.score = 0; 
+		this.record.best = 10; 
 		
 		this.init_stage();
 		
@@ -17,7 +20,7 @@ class App{
 		
 	//	this.ball = new Ball(1,100,100,1,1);
 		this.bricks = new Bricks(this.top_line_padding, this.bottom_line_padding);
-		this.balls = new Balls(this.canvas.width/4,this.bottom_line_padding,this.canvas.width/2, this.top_line_padding, this.bottom_line_padding,this.canvas, this.ctx, this.bricks);
+		this.balls = new Balls(this.canvas.width/4,this.bottom_line_padding,this.canvas.width/2, this.top_line_padding, this.bottom_line_padding,this.canvas, this.ctx, this.bricks, this.record);
 		
 				
 		requestAnimationFrame(this.animate.bind(this));
@@ -36,13 +39,11 @@ class App{
 	}
 	draw_stage(){
 		this.ctx.beginPath();
-		this.score = 2;
-		this.best = 10;
 		this.ctx.font = '10px Georgia';
         this.ctx.textAlign = 'center';
         this.ctx.textBaseline = 'middle';
         this.ctx.fillStyle = '#000000';
-        this.ctx.fillText(`SCORE : ${this.score}          BEST : ${this.best}`, this.canvas.width/4, this.top_line_padding/2); 
+        this.ctx.fillText(`SCORE : ${this.record.score}          BEST : ${this.record.best}`, this.canvas.width/4, this.top_line_padding/2); 
 		this.ctx.closePath();		
 
 		

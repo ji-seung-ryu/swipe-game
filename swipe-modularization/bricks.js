@@ -10,10 +10,9 @@ export class Bricks {
 		this.right_padding = 2; 
 		this.brick_width = 52;
 		this.brick_height = 20;
+		this.brick_status = 0; 
 		
-		for (var b=0;b<6;b++){
-			this.container.push(new Brick((this.brick_width + this.right_padding) * b , this.top_line_padding, this.brick_width, this.brick_height))
-		}
+		
 	
 
 		
@@ -25,8 +24,10 @@ export class Bricks {
 			brick.broken_brick.y += this.top_down_padding; 
 		}.bind(this))
 		
+		this.brick_status += 1;
+		
 		for (var b=0;b<6;b++){
-			this.container.push(new Brick((this.brick_width + this.right_padding) * b , this.top_line_padding, this.brick_width, this.brick_height))
+			if (this.half_chance())this.container.push(new Brick((this.brick_width + this.right_padding) * b , this.top_line_padding, this.brick_width, this.brick_height,this.brick_status));
 		}
 	}
 	
@@ -37,4 +38,8 @@ export class Bricks {
 		   brick.draw(this.ctx);
 	   }.bind(this))
     }
+	
+	half_chance (){
+		return Math.floor((Math.random()*10))%2;
+	}
 }

@@ -1,6 +1,6 @@
 import { Ball } from './ball.js';
 export class Balls {
-    constructor(x, y, stageWidth, stage_min_height, stage_max_height, canvas, ctx, bricks) {
+    constructor(x, y, stageWidth, stage_min_height, stage_max_height, canvas, ctx, bricks,record) {
         this.x = x;
         this.y = y;
         this.stageWidth = stageWidth;
@@ -9,6 +9,7 @@ export class Balls {
         this.canvas = canvas;
         this.ctx = ctx;
 		this.bricks = bricks;
+		this.record = record; 
 		
 		this.initiated = 0; 
         this.line_length = 1000;
@@ -208,6 +209,7 @@ export class Balls {
             );
         }
 		
+		this.record.score += 1;
 		this.bricks.add_line();
     }
     draw(ctx) {
