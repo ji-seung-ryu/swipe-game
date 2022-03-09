@@ -1,4 +1,5 @@
-import { Ball } from './ball.js';
+import { Blue_ball } from './blue_ball.js';
+import {Green_ball} from './green_ball.js';
 export class Balls {
     constructor(x, y, stageWidth, stage_min_height, stage_max_height, canvas, ctx, bricks,record) {
         this.x = x;
@@ -11,11 +12,15 @@ export class Balls {
 		this.bricks = bricks;
 		this.record = record; 
 		
+		this.dead_green_cnt = 0; 
 		this.initiated = 0; 
         this.line_length = 1000;
         this.all_ball_alive = 0;
-        this.container = new Array();
-        this.ball_cnt = 0;
+        this.blue_container = new Array();
+		this.green_container = new Array();
+        this.blue_ball_cnt = 0;
+		this.brick_width = bricks.brick_width;
+		this.brick_height = bricks.brick_height;
 
         document.addEventListener('mousemove', this.set_theta.bind(this), false);
 
@@ -40,7 +45,7 @@ export class Balls {
         this.theta = Math.atan(this.tan);
     }
     set_line_length() {
-        if (this.all_ball_alive == 1) return;
+        if (this.all_blue_ball_alive == 1) return;
         var celing_x = (this.stage_min_height - this.y) / this.tan + this.x;
 
         var line_length_cand =
@@ -140,91 +145,120 @@ export class Balls {
         ctx.setTransform(2, 0, 0, 2, 0, 0);
     }
     shoot() {
-        if (this.all_ball_alive == 1) return;
+        if (this.all_blue_ball_alive == 1) return;
 
 		this.initiated = 0; 
-        this.all_ball_alive = 1;
+        this.all_blue_ball_alive = 1;
+		this.line_length = 0;
 		
-		var ball_cnt = 0; 
-        this.container.forEach(
-            function (ball) {
-				var shoot_ball = () => {
-					console.log ('shoot');
-					console.log (ball);
-					ball.dx = ball.speed * Math.cos(this.theta);
-                	ball.dy = ball.speed * Math.sin(this.theta);
+		var blue_ball_cnt = 0; 
+        this.blue_container.forEach(
+            function (blue_ball) {
+				var shoot_blue_ball = () => {
+					
+					blue_ball.dx = blue_ball.speed * Math.cos(this.theta);
+                	blue_ball.dy = blue_ball.speed * Math.sin(this.theta);
                 	if (this.theta >= 0) {
-                		ball.dx *= -1;
-                    	ball.dy *= -1;
+                		blue_ball.dx *= -1;
+                    	blue_ball.dy *= -1;
                		 }
 				}		
 			
-				setTimeout (shoot_ball, ball_cnt * 1000);
-				ball_cnt += 1; 
+				setTimeout (shoot_blue_ball, blue_ball_cnt * 100);
+				blue_ball_cnt += 1; 
 
                 
             }.bind(this)
         );
     }
 
-    check_all_ball_alive() {
+    check_all_blue_ball_alive() {
 		if (this.initiated) return;
 		
-        var all_ball_alive = 0;
-        var all_ball_dead = 0;
-        this.container.forEach(
-            function (ball) {
-                if (all_ball_dead == 0) {
-                    if (ball.survived == 0)
+        var all_blue_ball_alive = 0;
+        var all_blue_ball_dead = 0;
+        this.blue_container.forEach(
+            function (blue_ball) {
+                if (all_blue_ball_dead == 0) {
+                    if (blue_ball.survived == 0)
 					{
-						this.x = ball.x;
-						ball.y = this.y;
-						ball.dx = 0;
-						ball.dy = 0; 
-						ball.survived = 2; 
+						this.x = blue_ball.x;
+						blue_ball.y = this.y;
+						blue_ball.dx = 0;
+						blue_ball.dy = 0; 
+						blue_ball.survived = 2; 
 					}
                 }
 
-                all_ball_alive += (ball.survived == 1);
-                all_ball_dead += (ball.survived != 1);
+                all_blue_ball_alive += (blue_ball.survived == 1);
+                all_blue_ball_dead += (blue_ball.survived != 1);
             }.bind(this)
         );
 
-        if (all_ball_alive == 0) this.all_ball_alive = 0;
+        if (all_blue_ball_alive == 0) this.all_blue_ball_alive = 0;
 			
     }
 
-    init_balls() {
+    update() {
         // how do i empty an array  ?
 		if (this.initiated) return;
 		this.initiated = 1; 
 		
-        this.ball_cnt += 1;
+		this.dead_green_cnt = 0;
+		this.green_container.forEach(green_ball=>{
+			green_ball.update()
+			if (!green_ball.survived) this.dead_green_cnt += 1;
+		});
+									 
+		
+		this.green_ball_pos = 0; 
+		while (this.green_ball_pos ==0){
+			this.green_ball_pos = Math.floor(Math.random()*10)% 7;
+		}
+		
+		this.green_container.push (new Green_ball(this.green_ball_pos* this.stageWidth/6-this.brick_width/2,this.stage_min_height+this.brick_height/2,this.stage_max_height));
+		
+		
+		
+        this.blue_ball_cnt = this.dead_green_cnt+1;
+		
+		
+        this.blue_container = [];
 
-        this.container = [];
-
-        for (var ball = 0; ball < this.ball_cnt; ball += 1) {
-            this.container.push(
-                new Ball(this.ball_cnt, this.x, this.y, 0, 0, this.stageWidth, this.stage_min_height, this.stage_max_height, this.bricks)
+        for (var blue_ball = 0; blue_ball < this.blue_ball_cnt; blue_ball += 1) {
+            this.blue_container.push(
+                new Blue_ball(this.ball_cnt, this.x, this.y, 0, 0, this.stageWidth, this.stage_min_height, this.stage_max_height, this.bricks, this.green_container)
             );
         }
 		
-		this.record.score += 1;
-		this.bricks.add_line();
+		this.record.score = this.blue_ball_cnt;
+		this.record.best = Math.max (this.record.score, this.record.best);
+		
+		this.bricks.update(this.green_ball_pos);
+		
+		
     }
+	
+	
     draw(ctx) {
         this.ctx = ctx;
         
         this.set_line_length();
-        this.check_all_ball_alive();
+        this.check_all_blue_ball_alive();
 
-        this.container.forEach(
-            function (ball) {
-                ball.draw(this.ctx);
+        this.blue_container.forEach(
+            function (blue_ball) {
+                blue_ball.draw(this.ctx);
             }.bind(this)
         );
+		
+		this.green_container.forEach(
+			function (green_ball){
+				green_ball.draw(this.ctx);
+			}.bind(this)
+		);
 
         this.draw_line(ctx);
-        if (this.all_ball_alive == 0) this.init_balls();
+        if (this.all_blue_ball_alive == 0) this.update();
     }
 }

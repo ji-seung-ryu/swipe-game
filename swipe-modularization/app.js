@@ -12,7 +12,7 @@ class App{
 		this.bottom_line_padding = 410;
 		this.record = {};
 		this.record.score = 0; 
-		this.record.best = 10; 
+		this.record.best = localStorage.getItem('best'); 
 		
 		this.init_stage();
 		
@@ -44,6 +44,7 @@ class App{
         this.ctx.textBaseline = 'middle';
         this.ctx.fillStyle = '#000000';
         this.ctx.fillText(`SCORE : ${this.record.score}          BEST : ${this.record.best}`, this.canvas.width/4, this.top_line_padding/2); 
+		localStorage.setItem('best', this.record.best);
 		this.ctx.closePath();		
 
 		

@@ -1,5 +1,5 @@
-export class Ball{
-	constructor(id,x,y,dx,dy,stageWidth, stage_min_height,stage_max_height,bricks){
+export class Blue_ball{
+	constructor(id,x,y,dx,dy,stageWidth, stage_min_height,stage_max_height,bricks,green_balls){
 		
 		this.id = id; 
 		this.x = x;
@@ -10,8 +10,9 @@ export class Ball{
 		this.stage_min_height = stage_min_height;
 		this.stage_max_height = stage_max_height;
 		this.bricks = bricks;
+		this.green_balls = green_balls; 
 		
-		this.speed = 5; 
+		this.speed = 7; 
 		this.survived = 1;
 		// ball.survived 0: died, 1: alive 2: next starting point 
 		this.radius = 5;
@@ -76,6 +77,19 @@ export class Ball{
 			return;
 		}.bind(this))
 	}
+	
+	hit_green_ball(){
+		var padding_balls = 30;
+		this.green_balls.forEach(function(green_ball){
+		
+			if (!green_ball.survived) return;
+			if((this.x - green_ball.x) * (this.x - green_ball.x) + (this.y - green_ball.y) * (this.y - green_ball.y) <= this.radius + green_ball.radius+padding_balls){
+				green_ball.survived = 0;
+			} 
+			return;
+		}.bind(this))
+		
+	}
 	move_ball(){
 		if (this.survived){
 		
@@ -95,6 +109,7 @@ export class Ball{
 			ctx.beginPath();
 			this.hit_brick();
 			this.hit_wall();
+			this.hit_green_ball();
 			this.move_ball();
 			ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
             ctx.fillStyle = '#59a7f4';
