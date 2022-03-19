@@ -1,7 +1,11 @@
 <h3 align="center">relation between classes</h3>
+
 ![image](https://github.com/ji-seung-ryu/swipe-game/blob/main/swipe.drawio.png)
+
 <br>
+
 <h3 align="center">game playing screen</h3>
+
 ![image](https://github.com/ji-seung-ryu/swipe-game/blob/main/capture1.png)
 
 <br>
