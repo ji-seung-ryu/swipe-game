@@ -79,11 +79,11 @@ export class Blue_ball{
 	}
 	
 	hit_green_ball(){
-		var padding_balls = 30;
+		
 		this.green_balls.forEach(function(green_ball){
 		
 			if (!green_ball.survived) return;
-			if((this.x - green_ball.x) * (this.x - green_ball.x) + (this.y - green_ball.y) * (this.y - green_ball.y) <= this.radius + green_ball.radius+padding_balls){
+			if((this.x - green_ball.x) * (this.x - green_ball.x) + (this.y - green_ball.y) * (this.y - green_ball.y) <= this.radius * this.radius){
 				green_ball.survived = 0;
 			} 
 			return;
