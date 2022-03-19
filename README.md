@@ -1,16 +1,16 @@
-<h3>relation between classes</h3>
+<h3>Relation between classes</h3>
 
 ![image](https://github.com/ji-seung-ryu/swipe-game/blob/main/swipe.drawio.png)
 
 <br>
 
-<h3>game playing screen</h3>
+<h3>Game playing screen</h3>
 
 ![image](https://github.com/ji-seung-ryu/swipe-game/blob/main/capture1.png)
 
 <br>
 
-<h3 align="center"> what i learned from this project</h3>
+<h3> What i learned from this project</h3>
 
 * object
 ```sh
